@@ -32,18 +32,18 @@ ORIG_DATE := $(shell [[ -z "$(ORIG_ERROR)" ]] && docker inspect -f '{{ .Created 
 CONT_ERROR := $(shell docker pull $(IMAGE):$(PUSH_VER) >/dev/null 2>&1)
 CONT_DATE := $(shell [[ -z "$(CONT_ERROR)" ]] && docker inspect -f '{{ .Created }}' $(IMAGE):$(PUSH_VER) 2>/dev/null)
 NEEDS_UPDATE := $(shell [[ -z "$(CONT_DATE)" || `date -d "$(ORIG_DATE)" +%s` -gt `date -d "$(CONT_DATE)" +%s` ]] && echo "true")
-COMPARE := Origin image ($(ORIG_IMG):$(VERSION), $(ORIG_DATE)) is older then builded one ($(IMAGE):$(PUSH_VER), $(CONT_DATE)).
+COMPARE := Origin image: $(ORIG_IMG):$(VERSION), $(ORIG_DATE), builded one: $(IMAGE):$(PUSH_VER), $(CONT_DATE).
 
 ifeq "$(NEEDS_UPDATE)" "true"
 
 build:
-	@echo "=====> Building image $(IMAGE):$(PUSH_VER)..."
+	@echo "=====> Building image... $(COMPARE)"
 	@pref=`[[ "$(DEV)" == "true" ]] && echo "build-"`; ext="$(EXTENSIONS)"; \
 	docker image build --quiet -t build-$(IMAGE):$(PUSH_VER) --build-arg EXTENSIONS="$${ext,,}" $(DIR) \
 		--build-arg IMAGE=$${pref}$(PREFIX)$(ORIG_IMG) --build-arg VERSION=$(VERSION) 
 
 test:
-	@echo "=====> Testing image $(IMAGE):$(PUSH_VER)..."
+	@echo "=====> Testing image... $(COMPARE)"
 	if [[ -z "`docker image ls build-$(IMAGE) | grep "\s${PUSH_VER}\s"`" ]]; \
 		then echo "FAIL [ Missing image $(IMAGE):$(PUSH_VER) ]"; exit 1; fi
 	@echo 'OK'
@@ -64,7 +64,7 @@ test:
 push:
 	@if [[ -z "`docker image ls build-$(IMAGE) | grep "\s$(PUSH_VER)\s"`" ]]; \
 		then echo "=====> Nothing to push. $(COMPARE)"; \
-	else echo "=====> Pushing image $(IMAGE):$(PUSH_VER)..."; \
+	else echo "=====> Pushing image... $(COMPARE)"; \
 	docker tag build-$(IMAGE):$(PUSH_VER) $(IMAGE):$(PUSH_VER); \
 	docker image push $(IMAGE):$(PUSH_VER); fi
 

@@ -2,11 +2,10 @@ ARG IMAGE
 ARG VERSION
 FROM ${IMAGE}:${VERSION}
 
-ARG VERSION
 ARG EXTENSIONS
 
 ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
-ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN DISTRO="$(cat /etc/os-release | grep -E ^ID= | cut -d = -f 2)"; \
   if [ "${DISTRO}" = "ubuntu" ]; then \
@@ -18,7 +17,7 @@ RUN DISTRO="$(cat /etc/os-release | grep -E ^ID= | cut -d = -f 2)"; \
     apk update; apk upgrade; apk add curl git zip unzip bash; rm /var/cache/apk/*; \
   fi
 
-RUN chmod uga+x /usr/local/bin/install-php-extensions && sync && install-php-extensions "$EXTENSIONS"
+RUN install-php-extensions "$EXTENSIONS"
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
   ln -s $(composer config --global home) /root/composer && composer global require hirak/prestissimo
