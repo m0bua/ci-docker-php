@@ -1,5 +1,5 @@
 # Docker PHP images
-[![Build Status](https://travis-ci.org/m0bua/docker-php.svg?branch=master)](https://travis-ci.org/m0bua/docker-php)
+[![Build Status](https://travis-ci.com/m0bua/docker-php.svg?branch=master)](https://travis-ci.com/m0bua/docker-php)
 [![Docker Pulls](https://img.shields.io/docker/pulls/m0bua/php.svg)](https://hub.docker.com/r/m0bua/php/)
 
 Docker images built on top of the [official PHP images](https://hub.docker.com/_/php) with the addition of some common and useful extensions.
