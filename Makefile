@@ -40,7 +40,8 @@ build:
 	@echo "=====> Building image... $(COMPARE)"
 	@pref=`[[ "$(DEV)" == "true" ]] && echo "build-"`; ext="$(EXTENSIONS)"; \
 	docker image build --quiet -t build-$(IMAGE):$(PUSH_VER) --build-arg EXTENSIONS="$${ext,,}" $(DIR) \
-		--build-arg IMAGE=$${pref}$(PREFIX)$(ORIG_IMG) --build-arg VERSION=$(VERSION) 
+		--build-arg IMAGE=$${pref}$(PREFIX)$(ORIG_IMG) --build-arg VERSION=$(VERSION)
+	docker tag build-$(IMAGE):$(PUSH_VER) $(IMAGE):$(PUSH_VER)
 
 test:
 	@echo "=====> Testing image... $(COMPARE)"
@@ -72,7 +73,7 @@ else
 
 build:
 	@echo "=====> Nothing to build. $(COMPARE)"
-	docker tag $(IMAGE):$(PUSH_VER) build-$(IMAGE):$(PUSH_VER);
+	docker tag $(IMAGE):$(PUSH_VER) build-$(IMAGE):$(PUSH_VER)
 
 test:
 	@echo "=====> Nothing to test. $(COMPARE)"
