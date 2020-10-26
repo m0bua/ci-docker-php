@@ -2,11 +2,6 @@ ARG IMAGE
 ARG VERSION
 FROM ${IMAGE}:${VERSION}
 
-ARG EXTENSIONS
-
-ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
-
 RUN DISTRO="$(cat /etc/os-release | grep -E ^ID= | cut -d = -f 2)"; \
   if [ "${DISTRO}" = "ubuntu" ]; then \
     DEBIAN_FRONTEND=noninteractive apt-get update -q -y; \
@@ -17,7 +12,12 @@ RUN DISTRO="$(cat /etc/os-release | grep -E ^ID= | cut -d = -f 2)"; \
     apk update; apk upgrade; apk add curl git zip unzip bash; rm /var/cache/apk/*; \
   fi
 
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+ARG EXTENSIONS
+RUN echo $EXTENSIONS
+
 RUN install-php-extensions "$EXTENSIONS"
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
-  ln -s $(composer config --global home) /root/composer && composer global require hirak/prestissimo
+ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && ln -s $(composer config --global home) /root/composer

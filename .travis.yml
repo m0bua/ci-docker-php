@@ -1,7 +1,7 @@
-sudo: 'required'
-
-language: 'minimal'
-
+language: 'shell'
+os:
+  - 'linux'
+dist: 'xenial'
 services:
   - 'docker'
 
@@ -54,11 +54,9 @@ env:
 
 install:
   - 'make build VERSION=${VERSION}'
-  - 'make build VERSION=${VERSION} DEV=true'
   
 script:
   - 'make test VERSION=${VERSION}'
-  - 'make test VERSION=${VERSION} DEV=true'
 
 before_deploy:
   - 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
@@ -66,11 +64,6 @@ before_deploy:
 deploy:
   - provider: 'script'
     script: 'make push VERSION=${VERSION}'
-    on:
-      repo: 'm0bua/docker-php'
-      branch: 'master'
-  - provider: 'script'
-    script: 'make push VERSION=${VERSION} DEV=true'
     on:
       repo: 'm0bua/docker-php'
       branch: 'master'
