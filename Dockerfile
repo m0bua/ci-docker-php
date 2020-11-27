@@ -1,6 +1,5 @@
 ARG IMAGE
-ARG VERSION
-FROM ${IMAGE}:${VERSION}
+FROM ${IMAGE}
 
 RUN DISTRO="$(cat /etc/os-release | grep -E ^ID= | cut -d = -f 2)"; \
   if [ "${DISTRO}" = "ubuntu" ]; then \

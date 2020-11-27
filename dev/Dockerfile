@@ -1,5 +1,4 @@
 ARG IMAGE
-ARG VERSION
-FROM ${IMAGE}:${VERSION}
+FROM ${IMAGE}
 
 RUN install-php-extensions xdebug
