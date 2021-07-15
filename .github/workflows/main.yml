@@ -1,0 +1,62 @@
+name: Build, test and publish images
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize]
+  schedule:
+    - cron: '0 3 * * *'
+
+jobs:
+  
+  cancel-previous-runs:
+    name: Cancel previous runs
+    runs-on: ubuntu-20.04
+    if: "!contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]')"
+    steps:
+      - uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+
+  build-test-push:
+    name: Build, test and publish
+    runs-on: ubuntu-20.04
+    if: "!contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]')"
+    needs: cancel-previous-runs
+    strategy:
+      matrix:
+        version: [ '8', '7', '5', '8.0', '7.4', '7.3', '7.2', '7.1', '7.0', '5.6' ]
+        flavor: [ '-fpm-alpine', '-fpm', '', '-apache' ]
+        include:
+          - version: 'fpm-alpine'
+            flavor: ''
+          - version: 'fpm'
+            flavor: ''
+          - version: 'latest'
+            flavor: ''
+          - version: 'apache'
+            flavor: ''
+    env:
+      VERSION: "${{ matrix.version }}${{ matrix.flavor }}"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build images
+        run: |
+          make build VERSION=${VERSION}
+      - name: Test images
+        run: |
+          make test VERSION=${VERSION}
+      - name: Login to Docker HUB
+        if: "github.event_name != 'pull_request'"
+        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        env:
+          DOCKER_USERNAME: "${{ secrets.DOCKER_USERNAME }}"
+          DOCKER_PASSWORD: "${{ secrets.DOCKER_PASSWORD }}"
+
+      - name: Publish images
+        if: "github.event_name != 'pull_request'"
+        run: |
+          make push VERSION=${VERSION}
