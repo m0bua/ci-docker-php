@@ -7,7 +7,7 @@ IMAGE := m0bua/php
 VERSION ?= latest
 PUSH_VER := $(VERSION)
 
-EXTENSIONS := bcmath bz2 calendar exif intl gd ldap memcached OPcache pdo_mysql pdo_pgsql pgsql redis soap xsl zip sockets imagick pcntl
+EXTENSIONS := bcmath bz2 calendar exif intl gd ldap memcached OPcache pdo_mysql pdo_pgsql pgsql redis soap xsl zip sockets imagick pcntl mongodb
 EXT_EXTRA_CHECK := iconv mbstring
 
 PHP_MCRYPT := $(shell v="${VERSION}\n7.2"; [[ "`printf $${v}`" != "`printf $${v} | sort -V`" ]] && echo "true")
