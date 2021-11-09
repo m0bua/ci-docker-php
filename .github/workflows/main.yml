@@ -1,4 +1,4 @@
-name: Build, test and publish images
+name: Build, test and publish images to DockerHub
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  
+
   cancel-previous-runs:
     name: Cancel previous runs
     runs-on: ubuntu-latest
