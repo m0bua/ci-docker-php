@@ -2,7 +2,7 @@ ARG IMAGE
 FROM ${IMAGE}
 
 RUN DISTRO="$(cat /etc/os-release | grep -E ^ID= | cut -d = -f 2)"; \
-  if [ "${DISTRO}" = "ubuntu" ]; then \
+  if [ "${DISTRO}" = "debian" ] || [ "${DISTRO}" = "ubuntu" ]; then \
     DEBIAN_FRONTEND=noninteractive apt-get update -q -y; \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y; \
     DEBIAN_FRONTEND=noninteractive apt-get install -qq -y curl ssh-client git zip unzip; \
