@@ -20,6 +20,7 @@ ifeq "$(PHP_MYSQLI)" "true"
 endif
 
 build:
+
 	@echo "=====> Building image..."
 	@ext="$(EXTENSIONS)"; docker image build --quiet -t $(IMAGE):$(PUSH_VER) . \
 		--build-arg IMAGE=$(ORIG_IMG):$(VERSION) --build-arg EXTENSIONS="$${ext,,}";
@@ -27,6 +28,7 @@ build:
 		--build-arg IMAGE=$(IMAGE):$(PUSH_VER);
 
 test:
+
 	@echo "=====> Testing image..."
 	@if [[ -z "`docker image ls $(IMAGE) | grep "\s${PUSH_VER}\s"`" ]]; \
 		then echo "FAIL [ Missing image $(IMAGE):$(PUSH_VER) ]"; exit 1; fi
@@ -64,5 +66,11 @@ test:
 	@echo 'OK'
 
 push:
+
+	@echo "=====> Pushing container..."
 	@docker image push $(IMAGE):$(PUSH_VER)
+	@echo 'OK'
+
+	@echo "=====> Pushing dev container..."
 	@docker image push $(IMAGE):$(PUSH_VER)-dev
+	@echo 'OK'
