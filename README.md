@@ -18,3 +18,5 @@ You can find these images on the [Docker Hub](https://hub.docker.com/r/m0bua/php
 
 ## License
 Docker PHP Images is released under the [MIT](https://github.com/m0bua/docker-php/blob/master/LICENSE) license.
+
+Update: 20220328
