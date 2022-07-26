@@ -7,17 +7,8 @@ IMAGE := m0bua/php
 VERSION ?= latest
 PUSH_VER := $(VERSION)
 
-EXTENSIONS := bcmath bz2 calendar exif intl gd ldap memcached OPcache pdo_mysql pdo_pgsql pgsql redis soap xsl zip sockets imagick pcntl mongodb
+EXTENSIONS := bcmath bz2 calendar exif intl gd ldap memcached OPcache pdo_mysql pdo_pgsql pgsql redis soap xsl zip sockets imagick pcntl mongodb mcrypt mysqli
 EXT_EXTRA_CHECK := iconv mbstring
-
-PHP_MCRYPT := $(shell v="${VERSION}\n7.2"; [[ "`printf $${v}`" != "`printf $${v} | sort -V`" ]] && echo "true")
-ifeq "$(PHP_MCRYPT)" "true"
-	EXTENSIONS += mcrypt
-endif
-PHP_MYSQLI := $(shell v="${VERSION}\n7"; [[ "`printf $${v}`" != "`printf $${v} | sort -V`" ]] && echo "true")
-ifeq "$(PHP_MYSQLI)" "true"
-	EXTENSIONS += mysqli
-endif
 
 build:
 
