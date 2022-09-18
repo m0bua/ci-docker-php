@@ -1,9 +1,6 @@
 name: Build, test and publish images to DockerHub
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
     types: [opened, synchronize]
   schedule:
