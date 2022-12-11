@@ -1,4 +1,4 @@
 ARG IMAGE
 FROM ${IMAGE}
 
-RUN install-php-extensions xdebug-stable
+RUN install-php-extensions xdebug
