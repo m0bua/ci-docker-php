@@ -1,6 +1,9 @@
 name: Build, test and publish images to DockerHub
 
 on:
+  push:
+    branches:
+      - master
   pull_request:
     types: [opened, synchronize]
   schedule:
@@ -24,7 +27,7 @@ jobs:
     needs: cancel-previous-runs
     strategy:
       matrix:
-        version: [ '8', '7', '8.1', '8.0', '7.4' ]
+        version: [ '8', '7', '8.2', '8.1', '8.0', '7.4' ]
         flavor: [ '-fpm-alpine', '-fpm', '-alpine', '', '-apache' ]
         include:
           - version: 'fpm-alpine'
