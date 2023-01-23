@@ -12,9 +12,13 @@ RUN DISTRO="$(cat /etc/os-release | grep -E ^ID= | cut -d = -f 2)"; \
   fi
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
-
-ARG EXTENSIONS
-RUN install-php-extensions "$EXTENSIONS"
+RUN list="bcmath bz2 calendar exif intl gd ldap memcached OPcache pdo_mysql pdo_pgsql pgsql redis soap xsl zip sockets imagick pcntl mongodb mysqli mcrypt"; \
+    supported=$(curl -s https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/data/supported-extensions); \
+    php=$(php -v | head -n1 | cut -d" " -f2 | cut -f1-2 -d"."); install=""; \
+    for ext in $list; do \
+      if [ ! -z "`echo "$supported" | grep -i "$ext" | grep "$php"`" ]; then \
+        install="$install $ext"; \
+    fi; done; install-php-extensions "$install"
 
 ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \

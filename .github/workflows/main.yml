@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]')"
     steps:
-      - uses: styfle/cancel-workflow-action@0.6.0
+      - uses: styfle/cancel-workflow-action@main
         with:
           access_token: ${{ github.token }}
 
@@ -43,7 +43,7 @@ jobs:
     env:
       VERSION: "${{ matrix.version }}${{ matrix.flavor }}"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@main
 
       - name: Build images
         run: |
