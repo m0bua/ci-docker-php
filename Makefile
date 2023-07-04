@@ -7,14 +7,14 @@ IMAGE := m0bua/php
 VERSION ?= latest
 PUSH_VER := $(VERSION)
 
-PHP8p := $(shell v="${VERSION}\n8"; [[ "`printf $${v}`" != "`printf $${v} | sort -V`" ]] && echo "true")
+DEV := $(shell v="${VERSION}\n7"; [[ "`printf $${v}`" != "`printf $${v} | sort -V`" ]] && echo "true")
 
 build:
 
 	@echo "=====> Building image..."; \
 	docker image build --quiet -t $(IMAGE):$(PUSH_VER) . --build-arg IMAGE=$(ORIG_IMG):$(VERSION);
 
-	@if [[ ! -z "$(PHP8p)" ]]; then \
+	@if [[ ! -z "$(DEV)" ]]; then \
 		echo "=====> Building dev image..."; \
 		docker image build --quiet -t $(IMAGE):$(PUSH_VER)-dev dev --build-arg IMAGE=$(IMAGE):$(PUSH_VER); \
 	fi;
@@ -31,7 +31,7 @@ test:
 		echo 'FAIL [Composer]'; exit 1; fi; \
 	echo 'OK'
 
-	@if [[ ! -z "$(PHP8p)" ]]; then \
+	@if [[ ! -z "$(DEV)" ]]; then \
 		echo "=====> Testing dev image..."; \
 		if [[ -z "`docker image ls $(IMAGE) | grep "\s${PUSH_VER}-dev\s"`" ]]; \
 			then echo "FAIL [ Missing image $(IMAGE):$(PUSH_VER)-dev ]"; exit 1; fi; \
