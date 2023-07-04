@@ -28,9 +28,11 @@ jobs:
     strategy:
       matrix:
         version: [ '8', '7', '5', '8.2', '8.1', '8.0', '7.4', '7.3', '7.2' ]
-        flavor: [ '-fpm-alpine' ]
+        flavor: [ '-fpm-alpine', '-fpm' ]
         include:
           - version: 'fpm-alpine'
+            flavor: ''
+          - version: 'fpm'
             flavor: ''
     env:
       VERSION: "${{ matrix.version }}${{ matrix.flavor }}"
