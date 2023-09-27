@@ -10,17 +10,14 @@ PUSH_VER := $(VERSION)
 DEV := $(shell v="${VERSION}\n7"; [[ "`printf $${v}`" != "`printf $${v} | sort -V`" ]] && echo "true")
 
 build:
-
 	@echo "=====> Building image..."; \
 	docker image build --quiet -t $(IMAGE):$(PUSH_VER) . --build-arg IMAGE=$(ORIG_IMG):$(VERSION);
-
 	@if [[ ! -z "$(DEV)" ]]; then \
 		echo "=====> Building dev image..."; \
 		docker image build --quiet -t $(IMAGE):$(PUSH_VER)-dev dev --build-arg IMAGE=$(IMAGE):$(PUSH_VER); \
 	fi;
 
 test:
-
 	@echo "=====> Testing image..."; \
 	if [[ -z "`docker image ls $(IMAGE) | grep "\s${PUSH_VER}\s"`" ]]; \
 		then echo "FAIL [ Missing image $(IMAGE):$(PUSH_VER) ]"; exit 1; fi; \
@@ -30,7 +27,6 @@ test:
 			| grep '^Composer version [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
 		echo 'FAIL [Composer]'; exit 1; fi; \
 	echo 'OK'
-
 	@if [[ ! -z "$(DEV)" ]]; then \
 		echo "=====> Testing dev image..."; \
 		if [[ -z "`docker image ls $(IMAGE) | grep "\s${PUSH_VER}-dev\s"`" ]]; \
@@ -43,11 +39,9 @@ test:
 		echo 'OK'; fi
 
 push:
-
 	@echo "=====> Pushing container..."; \
 	docker image push $(IMAGE):$(PUSH_VER); \
 	echo 'OK'
-
 	@echo "=====> Pushing dev container..."; \
 	docker image push $(IMAGE):$(PUSH_VER)-dev; \
 	echo 'OK'
