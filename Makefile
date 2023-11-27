@@ -6,7 +6,6 @@ ORIG_IMG := php
 IMAGE := m0bua/php
 VERSION ?= latest
 PUSH_VER := $(VERSION)
-
 DEV := $(shell v="${VERSION}\n7"; [[ "`printf $${v}`" != "`printf $${v} | sort -V`" ]] && echo "true")
 
 build:
