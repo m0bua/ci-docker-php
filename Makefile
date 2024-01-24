@@ -1,6 +1,5 @@
 SHELL := /bin/bash
 ALL: build
-.PHONY: build test push
 
 ORIG_IMG := php
 IMAGE := m0bua/php
