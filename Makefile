@@ -1,6 +1,5 @@
 SHELL := /bin/bash
 ALL: build
-
 ORIG_IMG := php
 IMAGE := m0bua/php
 VERSION ?= latest
