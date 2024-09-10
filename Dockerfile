@@ -1,18 +1,10 @@
 ARG IMAGE
 FROM ${IMAGE}
 
-RUN DISTRO="$(cat /etc/os-release | grep -E ^ID= | cut -d = -f 2)"; \
-  if [ "${DISTRO}" = "debian" ] || [ "${DISTRO}" = "ubuntu" ]; then \
-    DEBIAN_FRONTEND=noninteractive apt-get update -q -y; \
-    DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y; \
-    DEBIAN_FRONTEND=noninteractive apt-get install -qq -y curl ssh-client git zip unzip sudo bash; \
-  fi; \
-  if [ "${DISTRO}" = "alpine" ]; then \
-    packages="curl openssh git zip unzip zlib zlib-dev bash sudo npm"; \
+RUN packages="curl openssh git zip unzip zlib zlib-dev bash sudo npm"; \
     packages="${packages} automake make alpine-sdk nasm autoconf build-base shadow gcc musl-dev libtool pkgconf"; \
     packages="${packages} file tiff jpeg libpng libpng-dev libwebp libwebp-dev libjpeg-turbo libjpeg-turbo-dev"; \
-    apk update; apk upgrade; apk add ${packages}; rm /var/cache/apk/*; \
-  fi
+    apk update --no-cache; apk upgrade --no-cache; apk add --no-cache ${packages};
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
