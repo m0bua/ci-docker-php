@@ -1,7 +1,7 @@
 ARG IMAGE
 FROM ${IMAGE}
 
-RUN packages="curl openssh git zip unzip zlib zlib-dev bash sudo npm"; \
+RUN packages="curl openssh git zip unzip zlib zlib-dev bash sudo"; \
     packages="${packages} automake make alpine-sdk nasm autoconf build-base shadow gcc musl-dev libtool pkgconf"; \
     packages="${packages} file tiff jpeg libpng libpng-dev libwebp libwebp-dev libjpeg-turbo libjpeg-turbo-dev"; \
     apk update --no-cache; apk upgrade --no-cache; apk add --no-cache ${packages};
