@@ -3,7 +3,7 @@ FROM ${IMAGE}
 
 RUN packages="curl openssh git zip unzip zlib zlib-dev bash sudo"; \
     packages="${packages} automake make alpine-sdk nasm autoconf build-base gcc musl-dev libtool pkgconf"; \
-    packages="${packages} file tiff jpeg libpng libpng-dev libwebp libwebp-dev libjpeg-turbo libjpeg-turbo-dev"; \
+    packages="${packages} file tiff jpeg libpng libpng-dev libwebp libwebp-dev libjpeg-turbo libjpeg-turbo-dev pngquant"; \
     apk update --no-cache; apk upgrade --no-cache; apk add --no-cache ${packages};
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
