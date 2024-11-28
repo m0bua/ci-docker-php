@@ -38,11 +38,13 @@ jobs:
       - uses: actions/checkout@main
 
       - name: Build images
-        run: |
-          make build VERSION=${VERSION}
+        if: "github.event_name != 'pull_request'"
+        run: make build VERSION=${VERSION}
+
       - name: Test images
-        run: |
-          make test VERSION=${VERSION}
+        if: "github.event_name != 'pull_request'"
+        run: make test VERSION=${VERSION}
+
       - name: Login to Docker HUB
         if: "github.event_name != 'pull_request'"
         run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
@@ -52,5 +54,18 @@ jobs:
 
       - name: Publish images
         if: "github.event_name != 'pull_request'"
-        run: |
-          make push VERSION=${VERSION}
+        run: make push VERSION=${VERSION}
+
+  clean:
+    name: Cleaning old containers
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]')"
+    needs: build-test-push
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Clean old images
+        if: "github.event_name != 'pull_request'"
+        run: make clean PASSWORD=${DOCKER_PASSWORD}
+        env:
+          DOCKER_PASSWORD: "${{ secrets.DOCKER_PASSWORD }}"

@@ -1,5 +1,5 @@
 ARG IMAGE
-FROM ${IMAGE}
+FROM ${IMAGE:-fpm-latest}
 
 RUN packages="curl openssh git zip unzip zlib zlib-dev bash sudo"; \
     packages="${packages} automake make alpine-sdk nasm autoconf build-base gcc musl-dev libtool pkgconf"; \

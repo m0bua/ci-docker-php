@@ -1,9 +1,10 @@
 SHELL := /bin/bash
 ALL: build
+VERSION ?= latest
 ORIG_IMG := php
 IMAGE := m0bua/php
-VERSION ?= latest
 PUSH_VER := $(VERSION)
+CLEAN_PWD := $(PASSWORD)
 NEW_VER := 8.4
 
 build:
@@ -44,4 +45,16 @@ push:
 	echo 'OK'
 	@echo "=====> Pushing dev container..."; \
 	docker image push $(IMAGE):$(PUSH_VER)-dev; \
+	echo 'OK'
+
+clean:
+	@echo "=====> Cleaning old images..."; \
+	link='https://hub.docker.com/v2/repositories/$(IMAGE)/tags'; \
+	list=`curl -s $$link?ordering=-last_updated | jq -r .results`; \
+	for i in `echo $$list | jq -cr .[]`; do \
+		name=`echo $$i | jq -r .name`; \
+		date=`echo $$i | jq -r .last_updated`; \
+		[[ `date +%F -d $$date` < `date +%F` ]] && \
+		curl -s -X DELETE -H "Authorization: JWT $(CLEAN_PWD)" $$link/$$name; \
+	done; \
 	echo 'OK'
