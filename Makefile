@@ -5,7 +5,7 @@ ORIG_IMG := php
 IMAGE := m0bua/php
 PUSH_VER := $(VERSION)
 CLEAN_PWD := $(PASSWORD)
-NEW_VER := 8.4
+NEW_VER := 8.5
 
 build:
 	@echo "=====> Building image..."; \
