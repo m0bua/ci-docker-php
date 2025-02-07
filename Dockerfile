@@ -8,7 +8,7 @@ RUN packages="curl openssh git zip unzip zlib zlib-dev bash sudo"; \
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
-RUN list="bcmath bz2 calendar exif intl gd imagick ldap memcached xsl zip OPcache mcrypt"; \
+RUN list="bcmath bz2 calendar exif intl gd imagick ldap memcached xsl zip OPcache mcrypt geoip"; \
     list="${list} mysqli pdo_mysql pdo_pgsql pgsql redis soap sockets pcntl mongodb"; \
     supported=$(curl -s https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/data/supported-extensions); \
     php=$(php -v | head -n1 | cut -d" " -f2 | cut -f1-2 -d"."); install=""; \
