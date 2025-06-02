@@ -1,10 +1,11 @@
 ARG IMAGE
 FROM ${IMAGE:-fpm-latest}
 
-RUN packages="curl openssh git zip unzip zlib zlib-dev bash sudo"; \
-    packages="${packages} automake make alpine-sdk nasm autoconf build-base gcc musl-dev libtool pkgconf"; \
+RUN packages="curl openssh git zip unzip zlib zlib-dev bash sudo npm"; \
+    packages="${packages} automake make alpine-sdk nasm autoconf build-base shadow gcc musl-dev libtool pkgconf"; \
     packages="${packages} file tiff jpeg libpng libpng-dev libwebp libwebp-dev libjpeg-turbo libjpeg-turbo-dev pngquant"; \
-    apk update --no-cache; apk upgrade --no-cache; apk add --no-cache ${packages};
+    apk update --no-cache; apk upgrade --no-cache; apk add --no-cache ${packages}; \
+    yarn install; npm install --global gulp gulp-cli; deluser --remove-home node;
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
